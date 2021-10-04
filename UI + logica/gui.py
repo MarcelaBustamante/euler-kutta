@@ -110,29 +110,34 @@ canvas.create_text(25.0,389.0,anchor="nw",text="Valor N o H",fill="#5C5050",font
 #Boton
 button_image_1 = tk.PhotoImage(file=relative_to_assets("button_1.png"))
 #button_1 = tk.Button(image=button_image_1,borderwidth=0,highlightthickness=0,command=lambda: imprimirVariable(equ,tcero,tene,xcero,hon,opcion),relief="flat")
-button_1 = tk.Button(image=button_image_1,borderwidth=0,highlightthickness=0,command=lambda: plot(equ.get(),tcero.get(),tene.get()),relief="flat")
+button_1 = tk.Button(image=button_image_1,borderwidth=0,highlightthickness=0,command=lambda: plot(tcero.get(),tene.get()),relief="flat")
 button_1.place(x=38.0,y=444.0,width=170.0,height=36.0)
 
 canvas.create_rectangle(8.0,33.0,52.0,37.0,fill="#FFFFFF",outline="")
 canvas.create_rectangle(8.0,132.0,52.0,136.0,fill="#FFFFFF",outline="")
 
-def plot(equ,tcero,tene):
+def plot(tcero,tene):
     #Creción de grafico
     fig = Figure(figsize=(5,4),dpi=100)
+
     #rango numerico del grafico
     x = np.arange(tcero,tene,.01)
     #funcion a graficar
-    fig.add_subplot(111).plot(x,equ)
+
+    grafico = fig.add_subplot(111)
+    grafico.plot(x,(2*x)**2)
+    grafico.set_ylabel("Eje X")
+    grafico.set_xlabel("Eje T")
     #fig.add_subplot(111).plot(t,2 * np.sin(2 * np.pi * t))
-    grafico = FigureCanvasTkAgg(fig, master=window,) #crea area de dibujo de tkinter
+    canvas = FigureCanvasTkAgg(fig, master=window,) #crea area de dibujo de tkinter
     #canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-    grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
-    grafico.draw()
-   
+    canvas.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
+    canvas.draw()
+
     """ Estas lineas agregan la barra de herramientas
-    toolbar = NavigationToolbar2Tk(grafico,window)
-    toolbar.update()
-    grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
+       toolbar = NavigationToolbar2Tk(grafico,window)
+        toolbar.update()
+        grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
     """
 
 
