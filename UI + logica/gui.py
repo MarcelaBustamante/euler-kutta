@@ -110,27 +110,33 @@ canvas.create_text(25.0,389.0,anchor="nw",text="Valor N o H",fill="#5C5050",font
 #Boton
 button_image_1 = tk.PhotoImage(file=relative_to_assets("button_1.png"))
 #button_1 = tk.Button(image=button_image_1,borderwidth=0,highlightthickness=0,command=lambda: imprimirVariable(equ,tcero,tene,xcero,hon,opcion),relief="flat")
-button_1 = tk.Button(image=button_image_1,borderwidth=0,highlightthickness=0,command=lambda: plot(tcero.get(),tene.get()),relief="flat")
+button_1 = tk.Button(image=button_image_1,borderwidth=0,highlightthickness=0,command=lambda: plot(t,x,u,y),relief="flat")
 button_1.place(x=38.0,y=444.0,width=170.0,height=36.0)
 
 canvas.create_rectangle(8.0,33.0,52.0,37.0,fill="#FFFFFF",outline="")
 canvas.create_rectangle(8.0,132.0,52.0,136.0,fill="#FFFFFF",outline="")
 
-def plot(tcero,tene):
+def plot(t,x,u,y):
     #Creción de grafico
-    fig = Figure(figsize=(5,4),dpi=100)
+    fig = Figure(figsize=(5,4),dpi=100) #dpi - dots per inch
 
     #rango numerico del grafico
-    x = np.arange(tcero,tene,.01)
+    #x = np.arange(tcero,tene,.01)
     #funcion a graficar
 
     grafico = fig.add_subplot(111)
-    grafico.plot(x,(2*x)**2)
+    #x=[0,0.2,0.4,0.6,0.8,1]
+    #y=[1,0.6,0.36,0.22,0.13,0.08]
+    #q=[1,2,3,4,5]
+    #z=[1,2,3,4,5]
+    grafico.plot(t,x) #Puntos Euler
+    grafico.plot(u,y) #Puntos Euler mejorada
+    #grafico.plot(x,(2*x)**2)
     grafico.set_ylabel("Eje X")
     grafico.set_xlabel("Eje T")
-    #fig.add_subplot(111).plot(t,2 * np.sin(2 * np.pi * t))
-    canvas = FigureCanvasTkAgg(fig, master=window,) #crea area de dibujo de tkinter
-    #canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    
+    #crea area de dibujo de tkinter
+    canvas = FigureCanvasTkAgg(fig, master=window,) 
     canvas.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
     canvas.draw()
 
@@ -140,57 +146,44 @@ def plot(tcero,tene):
         grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
     """
 
+"""SECCION DE CALCULOS JULY"""
 
-
-#plt.plot(t,x,label = 'euler')
 #euler
-def euler(f, t0, tn, x0, n):
-    t = np.linspace(t0, tn, n+1)
+def euler(f, t0, tf, x0, n):
+    t = np.linspace(t0, tf, n+1)
     x = np.zeros(n+1)
     x[0] = x0
-    h = (tn - t0)/n
+    h = (tf - t0)/n
     for i in range(1, n+1):
         x[i]= x[i-1] + h * f(t[i-1],x[i-1])
     return ((t,x))
 
 #euler mejorado
-def eulerMej(f, t0, tn, x0, n):
-    t = np.linspace(t0, tn, n+1)
+def eulerMej(f, t0, tf, x0, n):
+    t = np.linspace(t0, tf, n+1)
     x = np.zeros(n+1)
     predictor = np.zeros(n+1)
-    predictor[0] = x0
-    h = (tn - t0)/n
+    predictor[0] = None
+    x[0] = x0
+    h = (tf - t0)/n
     for i in range(1, n+1):
         predictor[i]= x[i-1] + h * f(t[i-1],x[i-1])
-        x[i]= x[i-1] + (h/2) * (f(t[i-1],x[i-1]) + f(t[i-1] + h,predictor[i-1]))
+        x[i]= x[i-1] + (h/2) * (f(t[i-1],x[i-1]) + f(t[i],predictor[i]))
     return ((t,x))
 
-#Runge-Kutta
-def RK(f, t0, tn, x0, n):
-    t = np.linspace(t0, tn, n+1)
-    x = np.zeros(n+1)
-    x[0] = x0
-    h = (tn-t0)/n
-    for i in range(1,n+1):
-        k1 = f(t[i-1],x[i-1])
-        k2 = f(t[i-1] + h/2, x[i-1] + h*k1/2)
-        k3 = f(t[i-1] + h/2, x[i-1] + h*k2/2)
-        k4 = f(t[i-1] + h, x[i-1] + h*k3)
-        x[i] = x[i-1] + (1/6) * h * (k1 + 2*k2 + 2*k3 + k4)
-        return((t,x))
 
  # ejemplo de una funcion problema   
-
 def f(t,x):
-     #y = (2*t)**2
-     y = (50*t**2-10*x)/3
+     #y = (50*t**2-10*x)/3
      #y = eval('a(50*t**2-10*x)/3')
+     y = 0.5*(-x+t**2+4*t-1)
+     #y = -2*x  #0, 1, 1, 50
+     #y = x-t
      return (y)
+#200 iteraciones
+(t,x) = euler(f, 0, 1, 1, 100)
+(u,y) = eulerMej(f, 0, 1, 1, 50)
 
-#200 iteraciones - Aca esta generando los puntos a graficar
-(t,x) = euler(f, 0, 5, 0, 50)
-#(u,y) = eulerMej(f, 0, 5, 0, 50)
-#(v,z) = RK(f, 0, 5, 0, 50)
 
 window.resizable(False, False)
 window.mainloop()
