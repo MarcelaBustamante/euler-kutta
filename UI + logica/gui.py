@@ -69,28 +69,28 @@ canvas.create_text(8.0,112.0,anchor="nw",text="Ingrese los valores",fill="#FFFFF
 #campo 1
 entry_image_1 = tk.PhotoImage(file=relative_to_assets("entry_1.png"))
 entry_bg_1 = canvas.create_image(126.0,169.0,image=entry_image_1)
-entry_1 = tk.Entry(bd=0,bg="#FFFFFF",highlightthickness=0,textvariable=equ)
+entry_1 = tk.Entry(bd=0,bg="#FFFFFF",fg="#109DFA",highlightthickness=0,textvariable=equ)
 entry_1.place(x=28.0,y=149.0+19,width=196.0,height=15.0)
 canvas.create_text(25.0,151.0,anchor="nw",text="Funcion f(x,t)", fill="#5C5050",font=("RedHatDisplay Medium", 12 * -1))
 
 #Campo 2
 entry_image_2 = tk.PhotoImage(file=relative_to_assets("entry_2.png"))
 entry_bg_2 = canvas.create_image(126.0,236.0,image=entry_image_2)
-entry_2 = tk.Entry(bd=0,bg="#FFFFFF",highlightthickness=0,textvariable=xcero)
+entry_2 = tk.Entry(bd=0,bg="#FFFFFF",fg="#109DFA",highlightthickness=0,textvariable=xcero)
 entry_2.place(x=28.0,y=216.0+19,width=196.0,height=15.0)
 canvas.create_text(25.0,221.0,anchor="nw",text="X(0)",fill="#5C5050",font=("RedHatDisplay Medium", 12 * -1))
 
 #Campo 3
 entry_image_3 = tk.PhotoImage(file=relative_to_assets("entry_3.png"))
 entry_bg_3 = canvas.create_image(126.0,284.0,image=entry_image_3)
-entry_3 = tk.Entry(bd=0,bg="#FFFFFF",highlightthickness=0,textvariable=tcero)
+entry_3 = tk.Entry(bd=0,bg="#FFFFFF",fg="#109DFA", highlightthickness=0,textvariable=tcero)
 entry_3.place(x=28.0,y=264.0+19,width=196.0,height=15.0)
 canvas.create_text(25.0,269.0,anchor="nw",text="T(0)",fill="#5C5050",font=("RedHatDisplay Medium", 12 * -1))
 
 #Campo 4
 entry_image_4 = tk.PhotoImage(file=relative_to_assets("entry_4.png"))
 entry_bg_4 = canvas.create_image(126.0,332.0,image=entry_image_4)
-entry_4 = tk.Entry(bd=0,bg="#FFFFFF",highlightthickness=0,textvariable=tene)
+entry_4 = tk.Entry(bd=0,bg="#FFFFFF",fg="#109DFA", highlightthickness=0,textvariable=tene)
 entry_4.place(x=28.0,y=312.0+19,width=196.0,height=15.0)
 canvas.create_text(24.0,317.0,anchor="nw",text="T(f)",fill="#5C5050",font=("RedHatDisplay Medium", 12 * -1))
 
@@ -120,33 +120,38 @@ canvas.create_rectangle(8.0,132.0,52.0,136.0,fill="#FFFFFF",outline="")
  #funcion problema   
 def f(t,x):
     #y = (50*t**2-10*x)/3
+    print(equ)
+    print(equ.get())
     y = eval(equ.get())
+
     return (y)
 
 def plot(tcero,tene,xcero):
-
     #evaluo euler y eulerMej
     (t,x) = euler(f, tcero, tene, xcero, 50)
     (u,y) = eulerMej(f, tcero, tene, xcero, 50)
-
     #Creción de grafico
-    fig = Figure(figsize=(5,4),dpi=100)
-    fig2 = Figure(figsize=(5,4),dpi=100)
-    #rango numerico del grafico
-    #x = np.arange(tcero,tene,.01)
-    #funcion a graficar
-    fig.add_subplot(111).plot(t,x)
-    fig2.add_subplot(111).plot(u,y)
-    grafico = FigureCanvasTkAgg(fig, master=window,) #crea area de dibujo de tkinter
-    #canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-    grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
-    grafico.draw()
-   
+    fig = Figure(figsize=(5,4),dpi=100) #dpi - dots per inch
+    grafico = fig.add_subplot(111)
+    grafico.plot(t,x) #Puntos Euler
+    grafico.plot(u,y) #Puntos Euler mejorada
+    #grafico.plot(x,(2*x)**2)
+    grafico.set_ylabel("Eje X")
+    grafico.set_xlabel("Eje T")
+    
+    #crea area de dibujo de tkinter
+    canvas = FigureCanvasTkAgg(fig, master=window,) 
+    canvas.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
+    canvas.draw()
+
     """ Estas lineas agregan la barra de herramientas
-    toolbar = NavigationToolbar2Tk(grafico,window)
-    toolbar.update()
-    grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
+       toolbar = NavigationToolbar2Tk(grafico,window)
+        toolbar.update()
+        grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
     """
+
+"""SECCION DE CALCULOS"""
+
 #euler
 def euler(f, t0, tf, x0, n):
     t = np.linspace(t0, tf, n+1)
@@ -169,6 +174,19 @@ def eulerMej(f, t0, tf, x0, n):
         predictor[i]= x[i-1] + h * f(t[i-1],x[i-1])
         x[i]= x[i-1] + (h/2) * (f(t[i-1],x[i-1]) + f(t[i],predictor[i]))
     return ((t,x))
+
+
+ # ejemplo de una funcion problema   
+#def f(t,x):
+     #y = (50*t**2-10*x)/3
+     #y = eval('a(50*t**2-10*x)/3')
+   #  y = 0.5*(-x+t**2+4*t-1)
+     #y = -2*x  #0, 1, 1, 50
+     #y = x-t
+    # return (y)
+#200 iteraciones
+#(t,x) = euler(f, 0, 1, 1, 100)
+#(u,y) = eulerMej(f, 0, 1, 1, 50)
 
 
 window.resizable(False, False)
