@@ -24,6 +24,7 @@ def relative_to_assets(path: str) -> Path:
 #Creo la ventana de tkinter
 window = tk.Tk()
 window.geometry("801x511")
+window.title("Bienvenido a calculadora euler y euler mejorado")
 window.configure(bg = "#FFFFFF")
 canvas = tk.Canvas(
     window,
@@ -54,6 +55,7 @@ hon = tk.DoubleVar()
 
 
 
+
 canvas.place(x = 0, y = 0)
 canvas.create_rectangle(0.0,0.0,252.0,511.0,fill="#3775F5",outline="")
 
@@ -69,7 +71,7 @@ canvas.create_text(8.0,112.0,anchor="nw",text="Ingrese los valores",fill="#FFFFF
 #campo 1
 entry_image_1 = tk.PhotoImage(file=relative_to_assets("entry_1.png"))
 entry_bg_1 = canvas.create_image(126.0,169.0,image=entry_image_1)
-entry_1 = tk.Entry(bd=0,bg="#FFFFFF",fg="#109DFA",highlightthickness=0,textvariable=equ)
+entry_1 = tk.Entry(bd=0,bg="#FFFFFF",fg="#109DFA",highlightcolor="#109DFA",highlightthickness=0,textvariable=equ)
 entry_1.place(x=28.0,y=149.0+19,width=196.0,height=15.0)
 canvas.create_text(25.0,151.0,anchor="nw",text="Funcion f(x,t)", fill="#5C5050",font=("RedHatDisplay Medium", 12 * -1))
 
@@ -96,6 +98,7 @@ canvas.create_text(24.0,317.0,anchor="nw",text="T(f)",fill="#5C5050",font=("RedH
 
 #Radio button
 opcion = tk.IntVar()
+opcion = 1
 radio1 = tk.Radiobutton(window,text="H",foreground="#FFFFFF",selectcolor="#123379",activebackground="#3775F5",variable=opcion, value=1,background="#3775F5")
 radio1.place(x=120,y=356)
 
