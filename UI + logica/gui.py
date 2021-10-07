@@ -98,7 +98,7 @@ canvas.create_text(24.0,317.0,anchor="nw",text="T(f)",fill="#5C5050",font=("RedH
 
 #Radio button
 opcion = tk.IntVar()
-opcion = 1
+#opcion = 1 (Tira error esto)
 radio1 = tk.Radiobutton(window,text="H",foreground="#FFFFFF",selectcolor="#123379",activebackground="#3775F5",variable=opcion, value=1,background="#3775F5")
 radio1.place(x=120,y=356)
 
@@ -136,22 +136,24 @@ def plot(tcero, tene, xcero, opcion,hon):
     #Creción de grafico
     fig = Figure(figsize=(5,4),dpi=100) #dpi - dots per inch
     grafico = fig.add_subplot(111)
-    grafico.plot(t,x) #Puntos Euler
-    grafico.plot(u,y) #Puntos Euler mejorada
+    grafico.plot(t,x, color="blue") #Puntos Euler
+    grafico.plot(u,y,color="red") #Puntos Euler mejorada
+    fig.legend(['Euler', 'Euler mejorada'],)
     #grafico.plot(x,(2*x)**2)
     grafico.set_ylabel("Eje X")
     grafico.set_xlabel("Eje T")
     
     #crea area de dibujo de tkinter
-    canvas = FigureCanvasTkAgg(fig, master=window,) 
-    canvas.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
+    canvas = FigureCanvasTkAgg(fig, master=window) 
     canvas.draw()
+    canvas.get_tk_widget().place(x=288.0,y=10.0,width=500.0,height=459.0)
 
-    """ Estas lineas agregan la barra de herramientas
-       toolbar = NavigationToolbar2Tk(grafico,window)
-        toolbar.update()
-        grafico.get_tk_widget().place(x=280.0,y=20.0,width=503.0,height=459.0)
-    """
+    #Barra de herramientas
+    toolbar = NavigationToolbar2Tk(canvas, window)
+    toolbar.update()
+    toolbar.place(x=288.0,y=467,width=500.0,height=40)
+    
+
 
 """SECCION DE CALCULOS"""
 def calcular(tcero,tene,xcero,opcion,hon):
