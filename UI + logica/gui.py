@@ -24,7 +24,7 @@ def relative_to_assets(path: str) -> Path:
 #Creo la ventana de tkinter
 window = tk.Tk()
 window.geometry("801x511")
-window.title("Bienvenido a calculadora euler y euler mejorado")
+window.title("Graficadora euler y euler mejorado")
 window.configure(bg = "#FFFFFF")
 canvas = tk.Canvas(
     window,
@@ -63,11 +63,11 @@ hon.set(100)
 canvas.place(x = 0, y = 0)
 canvas.create_rectangle(0.0,0.0,252.0,511.0,fill="#3775F5",outline="")
 
-canvas.create_text(8.0,8.0,anchor="nw",text="Bienvenido",fill="#FFFFFF",font=("RedHatDisplay Bold", 20 * -1))
-canvas.create_text(8.0,45.0,anchor="nw",text="Este graficador le pertmitria",fill="#FFFFFF",font=("Roboto", 12 * -1))
-canvas.create_text(8.0,59.0,anchor="nw",text="introducir una función y aproximarla",fill="#FFFFFF",font=("Roboto", 12 * -1))
-canvas.create_text(8.0,73.0,anchor="nw",text="por los metodos de Euler, ",fill="#FFFFFF",font=("Roboto", 12 * -1))
-canvas.create_text(8.0,87.0,anchor="nw",text="Euler Mejorada y Runge kutta",fill="#FFFFFF",font=("Roboto", 12 * -1))
+canvas.create_text(8.0,8.0,anchor="nw",text="Tips para uso",fill="#FFFFFF",font=("RedHatDisplay Bold", 20 * -1))
+canvas.create_text(8.0,45.0,anchor="nw",text="op sin, cos y raiz usar",fill="#FFFFFF",font=("Roboto", 12 * -1))
+canvas.create_text(8.0,59.0,anchor="nw",text="np.sin(x), np.sqrt(x)",fill="#FFFFFF",font=("Roboto", 12 * -1))
+canvas.create_text(8.0,73.0,anchor="nw",text="Ejemplo: ",fill="#FFFFFF",font=("Roboto", 12 * -1))
+canvas.create_text(8.0,87.0,anchor="nw",text="0.1*np.sqrt(x)+0.4t**2",fill="#FFFFFF",font=("Roboto", 12 * -1))
 canvas.create_text(16.0,194.0,anchor="nw",text="Para potencia utilice doble **",fill="#FFFFFF",font=("Roboto", 10 * -1))
 canvas.create_text(17.0,362.0,anchor="nw",text="Seleccione N o H",fill="#FFFFFF",font=("Roboto", 10 * -1))
 canvas.create_text(8.0,112.0,anchor="nw",text="Ingrese los valores",fill="#FFFFFF",font=("RedHatDisplay Bold", 14 * -1))
@@ -77,7 +77,7 @@ entry_image_1 = tk.PhotoImage(file=relative_to_assets("entry_1.png"))
 entry_bg_1 = canvas.create_image(126.0,169.0,image=entry_image_1)
 entry_1 = tk.Entry(bd=0,bg="#FFFFFF",fg="#109DFA",highlightcolor="#109DFA",highlightthickness=0,textvariable=equ)
 entry_1.place(x=28.0,y=149.0+19,width=196.0,height=15.0)
-canvas.create_text(25.0,151.0,anchor="nw",text="Funcion f(x,t)", fill="#5C5050",font=("RedHatDisplay Medium", 12 * -1))
+canvas.create_text(25.0,151.0,anchor="nw",text="Funcion f(t,x)", fill="#5C5050",font=("RedHatDisplay Medium", 12 * -1))
 
 #Campo 2
 entry_image_2 = tk.PhotoImage(file=relative_to_assets("entry_2.png"))
@@ -191,6 +191,7 @@ def euler(f, t0, tf, x0, h, n):
 
 #euler mejorado
 def eulerMej(f, t0, tf, x0, h, n):
+    #paso 1
     t = np.linspace(t0, tf, n+1)
     x = np.zeros(n+1)
     predictor = np.zeros(n+1)
@@ -198,7 +199,9 @@ def eulerMej(f, t0, tf, x0, h, n):
     x[0] = x0
     h = (tf - t0)/n
     for i in range(1, n+1):
+        #paso 2
         predictor[i]= x[i-1] + h * f(t[i-1],x[i-1])
+        #paso 3
         x[i]= x[i-1] + (h/2) * (f(t[i-1],x[i-1]) + f(t[i],predictor[i]))
     return ((t,x))
 
