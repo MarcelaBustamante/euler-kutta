@@ -48,10 +48,14 @@ def imprimirVariable(equ, tcero, tene, xcero,hon,opcion):
 
 #Variables
 equ = tk.StringVar()
+equ.set('-2*x')
 tcero = tk.DoubleVar()
 tene = tk.DoubleVar()
+tene.set(1)
 xcero = tk.DoubleVar()
+xcero.set(1)
 hon = tk.DoubleVar()
+hon.set(100)
 
 
 
@@ -98,12 +102,13 @@ canvas.create_text(24.0,317.0,anchor="nw",text="T(f)",fill="#5C5050",font=("RedH
 
 #Radio button
 opcion = tk.IntVar()
-#opcion = 1 (Tira error esto)
+
 radio1 = tk.Radiobutton(window,text="H",foreground="#FFFFFF",selectcolor="#123379",activebackground="#3775F5",variable=opcion, value=1,background="#3775F5")
 radio1.place(x=120,y=356)
 
 radio2 = tk.Radiobutton(window,text="N",foreground="#FFFFFF",selectcolor="#123379",activebackground="#3775F5",variable=opcion, value=2,background="#3775F5")
 radio2.place(x=160,y=356)
+radio2.select()
 
 #Campo 5
 entry_image_5 = tk.PhotoImage(file=relative_to_assets("entry_5.png"))
@@ -123,7 +128,6 @@ canvas.create_rectangle(8.0,132.0,52.0,136.0,fill="#FFFFFF",outline="")
  
  #funcion problema   
 def f(t,x):
-    #y = (50*t**2-10*x)/3
     print(equ)
     print(equ.get())
     y = eval(equ.get())
@@ -157,6 +161,7 @@ def plot(tcero, tene, xcero, opcion,hon):
 
 """SECCION DE CALCULOS"""
 def calcular(tcero,tene,xcero,opcion,hon):
+    #paso 0 hallo H
     if opcion == 2:
         h = (tene - tcero)/hon
         n = int(hon)
@@ -167,6 +172,7 @@ def calcular(tcero,tene,xcero,opcion,hon):
         n = int((tene - tcero)/hon)
         print('H:', type(h).__name__)
         print('N:', type(n).__name__)
+
     #evaluo euler y eulerMej
     (t,x) = euler(f, tcero, tene, xcero, h, n)
     (u,y) = eulerMej(f, tcero, tene, xcero, h, n)
@@ -174,10 +180,11 @@ def calcular(tcero,tene,xcero,opcion,hon):
 
 #euler
 def euler(f, t0, tf, x0, h, n):
+    #paso 1  intervalo de puntos discretos
     t = np.linspace(t0, tf, n+1)
     x = np.zeros(n+1)
     x[0] = x0
-    
+    #paso 2 calcular Xn
     for i in range(1, n+1):
         x[i]= x[i-1] + h * f(t[i-1],x[i-1])
     return ((t,x))
